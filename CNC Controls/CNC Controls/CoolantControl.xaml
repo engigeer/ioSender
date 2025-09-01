@@ -9,11 +9,25 @@
     <UserControl.Resources>
         <local:BoolToVisibleConverter x:Key="IsVisibleConverter" />
     </UserControl.Resources>
-    <GroupBox x:Uid="grp_coolant" x:Name="grpCoolant" Header="Coolant" HorizontalAlignment="Left" VerticalAlignment="Top" Width="250">
-        <StackPanel HorizontalAlignment="Left" Margin="3,0,0,0" Grid.Row="1" VerticalAlignment="Top" Width="184">
-            <local:ToggleControl x:Uid="lbl_flood" x:Name="tswFlood" Tag="Flood" Label="Flood" IsChecked="{Binding Path=Flood, Mode=OneWay}" HorizontalAlignment="Left" Margin="20,0,0,0" VerticalAlignment="Top" Click="chkCoolant_Click"/>
-            <local:ToggleControl x:Uid="lbl_mist" x:Name="tswMist" Tag="Mist" Label="Mist" IsChecked="{Binding Path=Mist, Mode=OneWay}" HorizontalAlignment="Left" Margin="20,0,0,0" VerticalAlignment="Top" Click="chkCoolant_Click"/>
-            <local:ToggleControl x:Uid="lbl_fan" x:Name="tswFan" Tag="Fan" Label="Fan" IsChecked="{Binding Path=Fan0, Mode=OneWay}" Visibility="{Binding Path=HasFans, Mode=OneWay, Converter={StaticResource IsVisibleConverter}}" HorizontalAlignment="Left" Margin="20,0,0,0" VerticalAlignment="Top" Click="chkCoolant_Click"/>
-        </StackPanel>
+    <GroupBox x:Uid="grp_coolant" x:Name="grpCoolant" Header="Powder / Gas Control" HorizontalAlignment="Left" VerticalAlignment="Top" Width="250">
+        <Grid HorizontalAlignment="Left" Height="Auto" Margin="-2,4,0,0" VerticalAlignment="Top" Width="242">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="45*"/>
+                <ColumnDefinition Width="56*"/>
+                <ColumnDefinition Width="36*"/>
+                <ColumnDefinition Width="36*"/>
+                <ColumnDefinition Width="42*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30*"/>
+            </Grid.RowDefinitions>
+            <local:ToggleControl x:Uid="lbl_flood" x:Name="tswFlood" Tag="Flood" Grid.Row="0" Grid.ColumnSpan="2" Grid.Column="0" Label="Powder" IsChecked="{Binding Path=Flood, Mode=OneWay}" HorizontalAlignment="Left" Margin="20,0,0,0" VerticalAlignment="Top" Click="chkCoolant_Click"/>
+            <local:ToggleControl x:Uid="lbl_mist" x:Name="tswMist" Tag="Mist" Grid.Row="1" Grid.ColumnSpan="2" Grid.Column="0" Label="Argon" IsChecked="{Binding Path=Mist, Mode=OneWay}" HorizontalAlignment="Left" Margin="20,0,0,0" VerticalAlignment="Top" Click="chkCoolant_Click"/>
+            <local:ToggleControl x:Uid="lbl_fan" x:Name="tswFan" Tag="Fan" Grid.Row="2" Grid.ColumnSpan="2" Grid.Column="0" Label="Nozzle Chiller" IsChecked="{Binding Path=Fan0, Mode=OneWay}" Visibility="{Binding Path=HasFans, Mode=OneWay, Converter={StaticResource IsVisibleConverter}}" HorizontalAlignment="Left" Margin="20,0,0,0" VerticalAlignment="Top" Click="chkCoolant_Click"/>
+            <local:LEDControl x:Uid="lbl_tlo" Grid.Row="0" Grid.ColumnSpan="1" Grid.Column="2" Label="1" IsSet="True" Margin="10,0,0,0"/>
+            <local:LEDControl x:Uid="lbl_tlo_refd" Grid.Row="0" Grid.ColumnSpan="1" Grid.Column="3" Label="2" IsSet="False" Margin="10,0,0,0"/>
+        </Grid>
     </GroupBox>
 </UserControl>

@@ -48,7 +48,7 @@ namespace CNC.Controls
     /// </summary>
     public partial class LEDControl : UserControl
     {
-        static Brush LEDOn = Brushes.Red, LEDOff = Brushes.LightGray;
+        static Brush LEDOn = Brushes.ForestGreen, LEDOff = Brushes.LightGray;
 
         public LEDControl()
         {

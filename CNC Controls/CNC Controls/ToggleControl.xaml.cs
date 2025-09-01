@@ -29,7 +29,7 @@ namespace CNC.Controls
         {
             InitializeComponent();
 
-            tsw.Click += tsw_Click;
+            //tsw.Click += tsw_Click;
         }
 
         private void tsw_Click(object sender, RoutedEventArgs e)
