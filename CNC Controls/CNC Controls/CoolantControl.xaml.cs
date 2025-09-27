@@ -65,11 +65,6 @@ namespace CNC.Controls
 
         }
 
-        private void tswFlood_Loaded_1(object sender, System.Windows.RoutedEventArgs e)
-        {
-
-        }
-
         private void LEDControl_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
 

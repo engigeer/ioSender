@@ -54,7 +54,7 @@ namespace CNC.Core
         private string[] _rtState = new string[3];
         private bool has_wco = false, _hasFans = false, _multiProbe = false;
         private SDState _sdMounted = SDState.Unmounted;
-        private bool _flood, _mist, _fan0, _toolChange, _reset, _isMPos, _isJobRunning, _isProbeSuccess, _pgmEnd, _isParserStateLive, _isTloRefSet;
+        private bool _flood, _mist, _fan0, _hopper1, _hopper2, _toolChange, _reset, _isMPos, _isJobRunning, _isProbeSuccess, _pgmEnd, _isParserStateLive, _isTloRefSet;
         private bool _isCameraVisible = false, _responseLogVerbose = false, _isProbing = false, _autoReporting = false;
         private bool? _mpg;
         private int _pwm, _line, _scrollpos, _blocks = 0, _startFromBlock = 0, _executingBlock = 0, _auxinValue = -2, _autoReportInterval = 0, _spindle_num = 0;
@@ -523,6 +523,11 @@ namespace CNC.Core
                                                                                                 // CO2 Laser
         public bool HasFans { get { return _hasFans; } set { _hasFans = value; OnPropertyChanged(); } }
         public bool Fan0 { get { return _fan0; } set { _fan0 = value; OnPropertyChanged(); } }
+
+        public bool Hopper1 { get { return _hopper1; } set { _hopper1 = value; OnPropertyChanged(); } }
+
+        public bool Hopper2 { get { return _hopper2; } set { _hopper2 = value; OnPropertyChanged(); } }
+
         public int LineNumber { get { return _line; } private set { _line = value; OnPropertyChanged(); } }
 
         public double THCVoltage { get { return _thcVoltage; } private set { _thcVoltage = value; OnPropertyChanged(); } }
@@ -911,7 +916,7 @@ namespace CNC.Core
                     break;
 
                 case "A":
-                    if (_a != value)
+                    if (true) //_a != value)
                     {
                         _a = value;
 
@@ -1087,6 +1092,9 @@ namespace CNC.Core
                         try
                         {
                             Fan0 = (int.Parse(value) & 0x1) == 1;
+                            Hopper1 = (int.Parse(value) >> 1 & 0x1) != 1;
+                            Hopper2 = (int.Parse(value) >> 1 & 0x1) == 1;
+
                         }
                         catch { };
                     }
@@ -1281,7 +1289,7 @@ namespace CNC.Core
                                 case 10:
                                     if (GrblSettings.GetInteger(grblHALSetting.UnlockAfterEStop) != 0)
                                     {
-                                        msg = "Emergecy stop";
+                                        msg = "Emergency stop";
                                         _message = LibStrings.FindResource("ContClearResetUnlock");
                                     }
                                     break;
