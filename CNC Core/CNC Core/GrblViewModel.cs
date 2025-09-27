@@ -49,7 +49,7 @@ namespace CNC.Core
 {
     public class GrblViewModel : MeasureViewModel
     {
-        private string _tool, _probe, _message, _WPos, _MPos, _wco, _wcs, _a, _fs, _ov, _pn, _sc, _sd, _fans, _d, _gc, _h, _thcv, _thcs, _spindle;
+        private string _tool, _probe, _message, _WPos, _MPos, _DTG, _wco, _wcs, _a, _fs, _ov, _pn, _sc, _sd, _fans, _d, _gc, _h, _thcv, _thcs, _spindle;
         private string _mdiCommand, _mdiText, _fileName, _fsCwd;
         private string[] _rtState = new string[3];
         private bool has_wco = false, _hasFans = false, _multiProbe = false;
@@ -110,6 +110,7 @@ namespace CNC.Core
             AxisScaled.PropertyChanged += AxisScaled_PropertyChanged;
             Position.PropertyChanged += Position_PropertyChanged;
             MachinePosition.PropertyChanged += MachinePosition_PropertyChanged;
+            DtgPosition.PropertyChanged += Position_PropertyChanged;
             WorkPositionOffset.PropertyChanged += WorkPositionOffset_PropertyChanged;
             ProbePosition.PropertyChanged += ProbePosition_PropertyChanged;
             ToolOffset.PropertyChanged += ToolOffset_PropertyChanged;
@@ -159,6 +160,12 @@ namespace CNC.Core
         {
             if (e.PropertyName == nameof(Core.Position))
                 OnPropertyChanged(nameof(MachinePosition));
+        }
+
+        private void DtgPosition_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(Core.Position))
+                OnPropertyChanged(nameof(DtgPosition));
         }
 
         private void AxisScaled_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -234,9 +241,10 @@ namespace CNC.Core
         public void ClearPosition()
         {
             has_wco = false;
-            _MPos = _WPos = _wco = _h = string.Empty;
+            _MPos = _WPos = _DTG = _wco = _h = string.Empty;
             MachinePosition.Zero(); // clearing this stops updates of machine position flyout when > 3 axes, seemingly due to internal timing/sequencing issue.
             WorkPosition.Clear();
+            DtgPosition.Clear();
             WorkPositionOffset.Clear();
             Position.Clear();
             ProgramLimits.Clear();
@@ -426,6 +434,7 @@ namespace CNC.Core
                     _isJobRunning = value;
                     if (!_isJobRunning && GrblState.State != GrblStates.Tool)
                         JobTimer.Stop();
+                        DtgPosition.Clear();
                     OnPropertyChanged();
                     OnPropertyChanged(nameof(GcodeCommandsAllowed));
                 }
@@ -438,6 +447,7 @@ namespace CNC.Core
         public string WorkCoordinateSystem { get { return _wcs; } private set { _wcs = value; OnPropertyChanged(); } }
         public Position MachinePosition { get; private set; } = new Position();
         public Position WorkPosition { get; private set; } = new Position();
+        public Position DtgPosition { get; private set; } = new Position();
         public Position Position { get; private set; } = new Position();
         public bool IsMachinePosition { get { return _isMPos; } private set { _isMPos = value; OnPropertyChanged(); } }
         public bool IsMachinePositionKnown { get { return MachinePosition.IsSet(GrblInfo.AxisFlags); } }
@@ -941,6 +951,16 @@ namespace CNC.Core
                             IsMachinePosition = false;
                         _WPos = value;
                         WorkPosition.Parse(_WPos);
+                    }
+                    break;
+
+                case "DTG":
+                    if ((pos_changed = _DTG != value))
+                    {
+                        if (_isMPos)
+                            IsMachinePosition = false;
+                        _DTG = value;
+                        DtgPosition.Parse(_DTG);
                     }
                     break;
 
