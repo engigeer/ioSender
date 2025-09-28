@@ -54,7 +54,7 @@ namespace CNC.Core
         private string[] _rtState = new string[3];
         private bool has_wco = false, _hasFans = false, _multiProbe = false;
         private SDState _sdMounted = SDState.Unmounted;
-        private bool _flood, _mist, _fan0, _hopper1, _hopper2, _toolChange, _reset, _isMPos, _isJobRunning, _isProbeSuccess, _pgmEnd, _isParserStateLive, _isTloRefSet;
+        private bool _flood, _floodenable = true, _spindleenable, _mist, _fan0, _hopper1, _hopper2, _toolChange, _reset, _isMPos, _isJobRunning, _isProbeSuccess, _pgmEnd, _isParserStateLive, _isTloRefSet;
         private bool _isCameraVisible = false, _responseLogVerbose = false, _isProbing = false, _autoReporting = false;
         private bool? _mpg;
         private int _pwm, _line, _scrollpos, _blocks = 0, _startFromBlock = 0, _executingBlock = 0, _auxinValue = -2, _autoReportInterval = 0, _spindle_num = 0;
@@ -573,6 +573,32 @@ namespace CNC.Core
             }
         }
 
+        public bool FloodEnable
+        {
+            get { return _floodenable; }
+            set
+            {
+                if (_floodenable != value)
+                {
+                    _floodenable = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public bool SpindleEnable
+        {
+            get { return _spindleenable; }
+            set
+            {
+                if (_spindleenable != value)
+                {
+                    _spindleenable = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
         public bool IsToolChanging
         {
             get { return _toolChange; }
@@ -936,19 +962,24 @@ namespace CNC.Core
                     break;
 
                 case "A":
-                    if (true) //_a != value)
+                    if (_a != value)
                     {
                         _a = value;
 
                         if (_a == "")
                         {
                             Mist = Flood = IsToolChanging = false;
+                            FloodEnable = true;
+                            SpindleEnable = false;
                             SpindleState.Value = GCode.SpindleState.Off;
                         }
                         else
                         {
                             Mist = value.Contains("M");
                             Flood = value.Contains("F");
+                            SpindleEnable = value.Contains("S");
+                            if (GrblState.State != GrblStates.Hold)
+                                FloodEnable = !value.Contains("S");
                             IsToolChanging = value.Contains("T");
                             SpindleState.Value = value.Contains("S") ? GCode.SpindleState.CW : (value.Contains("C") ? GCode.SpindleState.CCW : GCode.SpindleState.Off);
                         }
