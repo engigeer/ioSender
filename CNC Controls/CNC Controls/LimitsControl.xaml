@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:CNC.Controls"
              mc:Ignorable="d" 
-             d:DesignHeight="216" d:DesignWidth="216">
+             d:DesignHeight="172" d:DesignWidth="216">
     <UserControl.Resources>
         <ResourceDictionary Source="SharedStyles.xaml"/>
     </UserControl.Resources>

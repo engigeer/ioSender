@@ -49,12 +49,12 @@ namespace CNC.Core
 {
     public class GrblViewModel : MeasureViewModel
     {
-        private string _tool, _probe, _message, _WPos, _MPos, _DTG, _wco, _wcs, _a, _fs, _ov, _pn, _sc, _sd, _fans, _d, _gc, _h, _thcv, _thcs, _spindle;
+        private string _tool, _probe, _message, _WPos, _MPos, _DTG, _wco, _wcs, _a, _fs, _ov, _pn, _sc, _sd, _ldm, _d, _gc, _h, _thcv, _thcs, _spindle;
         private string _mdiCommand, _mdiText, _fileName;
         private string[] _rtState = new string[3];
         private bool has_wco = false, _hasFans = false, _multiProbe = false;
         private SDState _sdMounted = SDState.Unmounted;
-        private bool _flood, _floodenable = true, _spindleenable, _mist, _fan0, _hopper1, _hopper2, _toolChange, _reset, _isMPos, _isJobRunning, _isProbeSuccess, _pgmEnd, _isParserStateLive, _isTloRefSet;
+        private bool _flood, _floodenable = true, _spindleenable, _emission, _mist, _pilot, _shutter, _threshold, _reseterror, _hopper1, _hopper2, _toolChange, _reset, _isMPos, _isJobRunning, _isProbeSuccess, _pgmEnd, _isParserStateLive, _isTloRefSet;
         private bool _isCameraVisible = false, _responseLogVerbose = false, _isProbing = false, _autoReporting = false;
         private bool? _mpg;
         private int _pwm, _line, _scrollpos, _blocks = 0, _startFromBlock = 0, _executingBlock = 0, _auxinValue = -2, _autoReportInterval = 0, _spindle_num = 0;
@@ -532,7 +532,13 @@ namespace CNC.Core
         public string RunTime { get { return JobTimer.RunTime; } set { OnPropertyChanged(); } } // Cannot be set...
                                                                                                 // CO2 Laser
         public bool HasFans { get { return _hasFans; } set { _hasFans = value; OnPropertyChanged(); } }
-        public bool Fan0 { get { return _fan0; } set { _fan0 = value; OnPropertyChanged(); } }
+        public bool Pilot { get { return _pilot; } set { _pilot = value; OnPropertyChanged(); } }
+
+        public bool Shutter { get { return _shutter; } set { _shutter = value; OnPropertyChanged(); } }
+
+        public bool Threshold { get { return _threshold; } set { _threshold = value; OnPropertyChanged(); } }
+
+        public bool ResetError { get { return _reseterror; } set { _reseterror = value; OnPropertyChanged(); } }
 
         public bool Hopper1 { get { return _hopper1; } set { _hopper1 = value; OnPropertyChanged(); } }
 
@@ -594,6 +600,19 @@ namespace CNC.Core
                 if (_spindleenable != value)
                 {
                     _spindleenable = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public bool EmissionEnable
+        {
+            get { return _emission; }
+            set
+            {
+                if (_emission != value)
+                {
+                    _emission = value;
                     OnPropertyChanged();
                 }
             }
@@ -971,6 +990,7 @@ namespace CNC.Core
                             Mist = Flood = IsToolChanging = false;
                             FloodEnable = true;
                             SpindleEnable = false;
+                            EmissionEnable = false;
                             SpindleState.Value = GCode.SpindleState.Off;
                         }
                         else
@@ -978,6 +998,7 @@ namespace CNC.Core
                             Mist = value.Contains("M");
                             Flood = value.Contains("F");
                             SpindleEnable = value.Contains("S");
+                            EmissionEnable = SpindleEnable && Threshold;
                             if (GrblState.State != GrblStates.Hold)
                                 FloodEnable = !value.Contains("S");
                             IsToolChanging = value.Contains("T");
@@ -1136,16 +1157,20 @@ namespace CNC.Core
                     }
                     break;
 
-                case "Fan":
-                    if (_fans != value)
+                case "LDM":
+                    if (_ldm != value)
                     {
-                        _fans = value;
+                        _ldm = value;
                         try
                         {
-                            Fan0 = (int.Parse(value) & 0x1) == 1;
-                            Hopper1 = (int.Parse(value) >> 1 & 0x1) != 1;
-                            Hopper2 = (int.Parse(value) >> 1 & 0x1) == 1;
+                            Pilot = (int.Parse(value) & 0x1) == 1;
+                            Shutter = (int.Parse(value) >> 1 & 0x1) == 1;
+                            Threshold = (int.Parse(value) >> 2 & 0x1) == 1;
+                            ResetError = (int.Parse(value) >> 3 & 0x1) == 1;
+                            Hopper1 = (int.Parse(value) >> 4 & 0x1) != 1;
+                            Hopper2 = (int.Parse(value) >> 4 & 0x1) == 1;
 
+                            EmissionEnable = SpindleEnable && Threshold;
                         }
                         catch { };
                     }

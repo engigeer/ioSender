@@ -7,6 +7,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="80" d:DesignWidth="250">
     <UserControl.Resources>
+        <local:LogicalNotConverter x:Key="LogicalNotConverter" />
         <local:BoolToVisibleConverter x:Key="IsVisibleConverter" />
     </UserControl.Resources>
     <GroupBox x:Uid="grp_coolant" x:Name="grpCoolant" Header="Powder / Gas Control" HorizontalAlignment="Left" VerticalAlignment="Top" Width="250">
@@ -23,11 +24,10 @@
                 <RowDefinition Height="30"/>
                 <RowDefinition Height="30*"/>
             </Grid.RowDefinitions>
-            <local:ToggleControl x:Uid="lbl_fan" x:Name="tswFan" Tag="Fan" Grid.Row="0" Grid.ColumnSpan="2" Grid.Column="0" Label="Powder" IsChecked="{Binding Path=Fan0, Mode=OneWay}" Visibility="{Binding Path=HasFans, Mode=OneWay, Converter={StaticResource IsVisibleConverter}}" HorizontalAlignment="Left" Margin="20,0,0,0" VerticalAlignment="Top" Click="chkCoolant_Click"/>
-            <local:ToggleControl x:Uid="lbl_mist" x:Name="tswMist" Tag="Mist" Grid.Row="1" Grid.ColumnSpan="2" Grid.Column="0" Label="Argon" IsChecked="{Binding Path=Mist, Mode=OneWay}" HorizontalAlignment="Left" Margin="20,0,0,0" VerticalAlignment="Top" Click="chkCoolant_Click"/>
-            <local:ToggleControl x:Uid="lbl_flood" x:Name="tswFlood" Tag="Flood" Grid.Row="2" Grid.ColumnSpan="4" Grid.Column="0" Label="Nozzle Chiller" IsEnabled="{Binding Path=FloodEnable, Mode=OneWay}" IsChecked="{Binding Path=Flood, Mode=OneWay}" HorizontalAlignment="Left" Margin="20,0,0,0" VerticalAlignment="Top" Click="chkCoolant_Click"/>
-            <local:LEDControl x:Uid="lbl_tlo" Grid.Row="0" Grid.ColumnSpan="1" Grid.Column="2" Label="1" IsSet="{Binding Path=Hopper1, Mode=OneWay}" Margin="10,0,0,0"/>
-            <local:LEDControl x:Uid="lbl_tlo_refd" Grid.Row="0" Grid.ColumnSpan="1" Grid.Column="3" Label="2" IsSet="{Binding Path=Hopper2, Mode=OneWay}" Margin="10,0,0,0"/>
+            <local:ToggleControl x:Uid="lbl_fan" x:Name="tswMist" Tag="Mist" Grid.Row="0" Grid.ColumnSpan="4" Grid.Column="0" Label="Powder / Argon" IsChecked="{Binding Path=Mist, Mode=OneWay}" HorizontalAlignment="Left" Margin="20,0,0,0" VerticalAlignment="Top" Click="chkCoolant_Click"/>
+            <local:ToggleControl x:Uid="lbl_flood" x:Name="tswFlood" Tag="Flood" Grid.Row="1" Grid.ColumnSpan="4" Grid.Column="0" Label="Nozzle Chiller" IsEnabled="{Binding Path=FloodEnable, Mode=OneWay}" IsChecked="{Binding Path=Flood, Mode=OneWay}" HorizontalAlignment="Left" Margin="20,0,0,0" VerticalAlignment="Top" Click="chkCoolant_Click"/>
+            <RadioButton x:Uid="lbl_powsel1" x:Name="rbPowSel1" Grid.Row="0" Grid.ColumnSpan="1" Grid.Column="3" Content="1" IsEnabled="{Binding Path=IsJobRunning, Converter={StaticResource LogicalNotConverter}}" IsChecked="{Binding Path=Hopper1, Mode=TwoWay}" Margin="11,8,0,0" Click="rbPowSel_Click"/>
+            <RadioButton x:Uid="lbl_powsel2" x:Name="rbPowSel2" Grid.Row="0" Grid.ColumnSpan="1" Grid.Column="4" Content="2" IsEnabled="{Binding Path=IsJobRunning, Converter={StaticResource LogicalNotConverter}}" IsChecked="{Binding Path=Hopper2, Mode=TwoWay}" Margin="11,8,0,0" Click="rbPowSel_Click"/>
         </Grid>
     </GroupBox>
 </UserControl>

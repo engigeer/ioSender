@@ -37,8 +37,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-using System.Windows.Controls;
 using CNC.Core;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace CNC.Controls
 {
@@ -48,6 +49,9 @@ namespace CNC.Controls
         public CoolantControl()
         {
             InitializeComponent();
+
+            rbPowSel1.Tag = "M520";
+            rbPowSel2.Tag = "M522";
         }
 
         private void chkCoolant_Click(object sender, System.Windows.RoutedEventArgs e)
@@ -56,18 +60,14 @@ namespace CNC.Controls
                 (DataContext as GrblViewModel).ExecuteCommand(GrblCommand.Flood);
             else if ((string)(sender as ToggleControl).Tag == "Mist")
                 (DataContext as GrblViewModel).ExecuteCommand(GrblCommand.Mist);
-            else
-                (DataContext as GrblViewModel).ExecuteCommand(GrblCommand.Fan);
+            //else
+            //    (DataContext as GrblViewModel).ExecuteCommand(GrblCommand.Fan);
         }
 
-        private void tswFlood_Loaded(object sender, System.Windows.RoutedEventArgs e)
+        private void rbPowSel_Click(object sender, RoutedEventArgs e)
         {
-
-        }
-
-        private void LEDControl_Loaded(object sender, System.Windows.RoutedEventArgs e)
-        {
-
+            (DataContext as GrblViewModel).ExecuteCommand((string)((RadioButton)sender).Tag);
+        
         }
     }
 }

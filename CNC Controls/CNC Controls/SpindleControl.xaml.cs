@@ -37,10 +37,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
+using AForge.Imaging.Filters;
+using CNC.Core;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
-using CNC.Core;
 using System.Windows.Input;
 
 namespace CNC.Controls
@@ -52,10 +53,6 @@ namespace CNC.Controls
             InitializeComponent();
 
             DataContextChanged += SpindleControl_DataContextChanged;
-
-            rbSpindleOff.Tag = "M5";
-            rbSpindleCW.Tag = "M3{0}";
-            rbSpindleCCW.Tag = "M4{0}";
 
             overrideControl.ResetCommand = GrblConstants.CMD_SPINDLE_OVR_RESET;
             overrideControl.FineMinusCommand = GrblConstants.CMD_SPINDLE_OVR_FINE_MINUS;
@@ -93,10 +90,6 @@ namespace CNC.Controls
             set { SetValue(IsSpindleStateEnabledProperty, value); }
         }
 
-        public string SpindleOffCommand { get { return (string)rbSpindleOff.Tag; } set { rbSpindleOff.Tag = value; } }
-        public string SpindleCWCommand { get { return (string)rbSpindleCW.Tag; } set { rbSpindleCW.Tag = value; } }
-        public string SpindleCCWCommand { get { return (string)rbSpindleCCW.Tag; } set { rbSpindleCCW.Tag = value; } }
-
         public new bool IsFocused { get { return cvRPM.IsFocused; } }
         public bool SPOr { get { return !(DataContext as GrblViewModel).IsJobRunning || (DataContext as GrblViewModel).GrblState.State == GrblStates.Hold; } }
 
@@ -108,34 +101,22 @@ namespace CNC.Controls
             }
         }
 
-        private void rbSpindle_Click(object sender, RoutedEventArgs e)
-        {
-            var p = DataContext as GrblViewModel;
-
-            if(p.IsJobRunning && p.GrblState.State == GrblStates.Hold)
-                p.ExecuteCommand(((char)GrblConstants.CMD_SPINDLE_OVR_STOP).ToString());
-            else
-            {
-                string rpm = p.ProgrammedRPM == 0d ? "S" + p.RPM.ToInvariantString() : "";
-                (DataContext as GrblViewModel).ExecuteCommand(string.Format((string)((RadioButton)sender).Tag, rpm));
-            }
-        }
-
         void override_CommandGenerated(byte[] commands, int len)
         {
             Comms.com.WriteBytes(commands, len);
         }
 
-        private void cbxSpindle_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void chkSpindle_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            if (e.AddedItems.Count == 1 && ((ComboBox)sender).IsDropDownOpen)
-            {
-                if (GrblInfo.IsGrblHAL && GrblInfo.Build < 20240812) // Workaround for controller bug
-                    (DataContext as GrblViewModel).ExecuteCommand(string.Format(GrblCommand.SpindleChange, ((Spindle)e.AddedItems[0]).SpindleId));
-                else
-                    (DataContext as GrblViewModel).ExecuteCommand(string.Format(GrblCommand.SpindleChange, ((Spindle)e.AddedItems[0]).SpindleNum));
-            }
-            // TODO: add disable of CCW and RPM based on caps
+            if ((string)(sender as ToggleControl).Tag == "Pilot")
+                (DataContext as GrblViewModel).ExecuteCommand(GrblCommand.Pilot);
+            else if ((string)(sender as ToggleControl).Tag == "Shutter")
+                (DataContext as GrblViewModel).ExecuteCommand(GrblCommand.Shutter);
+        }
+
+        private void LEDControl_Loaded(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
