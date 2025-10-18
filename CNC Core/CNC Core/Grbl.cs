@@ -76,7 +76,8 @@ namespace CNC.Core
             CMD_OPTIONAL_STOP_TOGGLE = 0x88,
             CMD_SINGLE_BLOCK_TOGGLE = 0x89,
             CMD_OVERRIDE_FAN0_TOGGLE = 0x8A,
-            CMD_OVERRIDE_FAN1_TOGGLE = 0x98,
+            CMD_PILOT_TOGGLE = 0xBA,
+            CMD_SHUTTER_TOGGLE = 0xBB,
             CMD_MPG_MODE_TOGGLE = 0x8B,
             CMD_AUTO_REPORTING_TOGGLE = 0x8C,
             CMD_FEED_OVR_RESET = 0x90,
@@ -918,8 +919,8 @@ namespace CNC.Core
     {
         public static string Mist { get; set; } = ((char)GrblConstants.CMD_COOLANT_MIST_OVR_TOGGLE).ToString();
         public static string Flood { get; set; } = ((char)GrblConstants.CMD_COOLANT_FLOOD_OVR_TOGGLE).ToString();
-        public static string Pilot { get; set; } = ((char)GrblConstants.CMD_OVERRIDE_FAN0_TOGGLE).ToString();
-        public static string Shutter { get; set; } = ((char)GrblConstants.CMD_OVERRIDE_FAN1_TOGGLE).ToString();
+        public static string Pilot { get; set; } = ((char)GrblConstants.CMD_PILOT_TOGGLE).ToString();
+        public static string Shutter { get; set; } = ((char)GrblConstants.CMD_SHUTTER_TOGGLE).ToString();
 
         public static string SpindleChange { get; set; } = "M104Q{0}";
         public static string ToolChange { get; set; } = "T{0}";
