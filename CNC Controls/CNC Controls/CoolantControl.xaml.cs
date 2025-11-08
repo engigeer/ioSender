@@ -50,7 +50,7 @@ namespace CNC.Controls
         {
             InitializeComponent();
 
-            rbPowSel1.Tag = "M520";
+            rbPowSel1.Tag = "M521";
             rbPowSel2.Tag = "M522";
         }
 
