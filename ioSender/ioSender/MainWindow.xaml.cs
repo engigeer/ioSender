@@ -160,11 +160,11 @@ namespace GCode_Sender
             xx.ItemsSource = UIViewModel.SidebarItems;
             if(AppConfig.Settings.Jog.Mode != JogConfig.JogMode.Keypad)
                 UIViewModel.SidebarItems.Add(new SidebarItem(jogControl));
+            UIViewModel.SidebarItems.Add(new SidebarItem(recipeControl));
             UIViewModel.SidebarItems.Add(new SidebarItem(macroControl));
             UIViewModel.SidebarItems.Add(new SidebarItem(gotoControl));
-            UIViewModel.SidebarItems.Add(new SidebarItem(outlineFlyout));
+            //UIViewModel.SidebarItems.Add(new SidebarItem(outlineFlyout));
             UIViewModel.SidebarItems.Add(new SidebarItem(mposFlyout));
-//            UIViewModel.SidebarItems.Add(new SidebarItem(thcControl));
 
             UIViewModel.CurrentView = getView((TabItem)tabMode.Items[tabMode.SelectedIndex = 0]);
             System.Threading.Thread.Sleep(50);

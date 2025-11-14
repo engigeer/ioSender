@@ -49,7 +49,7 @@ namespace CNC.Core
 {
     public class GrblViewModel : MeasureViewModel
     {
-        private string _tool, _probe, _message, _WPos, _MPos, _DTG, _wco, _wcs, _a, _fs, _ov, _pn, _sc, _sd, _ldm, _pfr, _d, _gc, _h, _thcv, _thcs, _spindle;
+        private string _tool, _probe, _message, _WPos, _MPos, _DTG, _wco, _wcs, _a, _fs, _ov, _pn, _sc, _sd, _ldm, _pfr, _cgas, _sgas, _d, _gc, _h, _thcv, _thcs, _spindle;
         private string _mdiCommand, _mdiText, _fileName;
         private string[] _rtState = new string[3];
         private bool has_wco = false, _hasFans = false, _multiProbe = false;
@@ -58,7 +58,7 @@ namespace CNC.Core
         private bool _isCameraVisible = false, _responseLogVerbose = false, _isProbing = false, _autoReporting = false;
         private bool? _mpg;
         private int _pwm, _line, _scrollpos, _blocks = 0, _startFromBlock = 0, _executingBlock = 0, _auxinValue = -2, _autoReportInterval = 0, _spindle_num = 0;
-        private double _feedrate = 0d, _powderrpm;
+        private double _feedrate = 0d, _powderrpm, _carrierlpm, _shieldlpm;
         private double _rpm = 0d, _rpmInput = 0d, _rpmDisplay = 0d, _jogStep = 0.1d, _tloReferenceOffset = double.NaN;
         private double _rpmActual = double.NaN;
         private double _feedOverride = 100d;
@@ -541,6 +541,10 @@ namespace CNC.Core
         public bool ResetError { get { return _reseterror; } set { _reseterror = value; OnPropertyChanged(); } }
 
         public double PowderRPM { get { return _powderrpm; } set { _powderrpm = value; OnPropertyChanged(); } }
+
+        public double CarrierLPM { get { return _carrierlpm; } set { _carrierlpm = value; OnPropertyChanged(); } }
+
+        public double ShieldLPM { get { return _shieldlpm; } set { _shieldlpm = value; OnPropertyChanged(); } }
 
         public bool Hopper1 { get { return _hopper1; } set { _hopper1 = value; OnPropertyChanged(); } }
 
@@ -1188,6 +1192,32 @@ namespace CNC.Core
                         }
                         else
                             PowderRPM = dbl.Parse(_pfr);
+                    }
+                    break;
+
+                case "CGas":
+                    if (_cgas != value)
+                    {
+                        _cgas = value;
+                        if (_cgas == string.Empty)
+                        {
+                            CarrierLPM = 0d;
+                        }
+                        else
+                            CarrierLPM = dbl.Parse(_cgas);
+                    }
+                    break;
+
+                case "SGas":
+                    if (_sgas != value)
+                    {
+                        _sgas = value;
+                        if (_sgas == string.Empty)
+                        {
+                            ShieldLPM = 0d;
+                        }
+                        else
+                            ShieldLPM = dbl.Parse(_sgas);
                     }
                     break;
 

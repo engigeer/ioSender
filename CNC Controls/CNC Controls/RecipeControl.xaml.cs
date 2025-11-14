@@ -1,5 +1,5 @@
 ﻿/*
- * THCMonitorControl.xaml.cs - part of CNC Controls library
+ * RecipeControl.xaml.cs - part of CNC Controls library
  *
  * v0.36 / 2021-11-01 / Io Engineering (Terje Io)
  *
@@ -37,25 +37,42 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
+using CNC.Core;
 using System.Windows;
 using System.Windows.Controls;
 
 namespace CNC.Controls
 {
     /// <summary>
-    /// Interaction logic for THCMonitorControl.xaml
+    /// Interaction logic for RecipeControl.xaml
     /// </summary>
-    public partial class THCMonitorControl : UserControl, ISidebarControl
+    public partial class RecipeControl : UserControl, ISidebarControl
     {
-        public THCMonitorControl()
+        public RecipeControl()
         {
             InitializeComponent();
+
+            btn_pfr.Tag = "PowderFeedRate";
+            btn_cgas.Tag = "CarrierGas";
+            btn_sgas.Tag = "ShieldGas";
         }
         public string MenuLabel { get { return (string)FindResource("MenuLabel"); } }
 
         private void btn_Close(object sender, RoutedEventArgs e)
         {
             this.Visibility = Visibility.Hidden;
+        }
+
+        private void btn_Set(object sender, System.Windows.RoutedEventArgs e)
+        {
+            if ((string)(sender as Button).Tag == "PowderFeedRate")
+                (DataContext as GrblViewModel).ExecuteCommand(string.Format("M520 R{0}", (DataContext as GrblViewModel).PowderRPM.ToString("F2")));
+            else if ((string)(sender as Button).Tag == "CarrierGas")
+                (DataContext as GrblViewModel).ExecuteCommand(string.Format("M518 R{0}", (DataContext as GrblViewModel).CarrierLPM.ToString("F2")));
+            else if ((string)(sender as Button).Tag == "ShieldGas")
+                (DataContext as GrblViewModel).ExecuteCommand(string.Format("M519 R{0}", (DataContext as GrblViewModel).ShieldLPM.ToString("F2")));
+            //else
+            //    (DataContext as GrblViewModel).ExecuteCommand(GrblCommand.Fan);
         }
     }
 }

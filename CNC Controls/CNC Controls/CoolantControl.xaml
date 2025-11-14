@@ -28,8 +28,7 @@
             <local:ToggleControl x:Uid="lbl_flood" x:Name="tswFlood" Tag="Flood" Grid.Row="1" Grid.ColumnSpan="4" Grid.Column="0" Label="Nozzle Chiller" IsEnabled="{Binding Path=FloodEnable, Mode=OneWay}" IsChecked="{Binding Path=Flood, Mode=OneWay}" HorizontalAlignment="Left" Margin="20,0,0,0" VerticalAlignment="Top" Click="chkCoolant_Click"/>
             <RadioButton x:Uid="lbl_powsel1" x:Name="rbPowSel1" Grid.Row="0" Grid.ColumnSpan="1" Grid.Column="3" Content="1" IsEnabled="{Binding Path=IsJobRunning, Converter={StaticResource LogicalNotConverter}}" IsChecked="{Binding Path=Hopper1, Mode=TwoWay}" Margin="11,8,0,0" Click="rbPowSel_Click"/>
             <RadioButton x:Uid="lbl_powsel2" x:Name="rbPowSel2" Grid.Row="0" Grid.ColumnSpan="1" Grid.Column="4" Content="2" IsEnabled="{Binding Path=IsJobRunning, Converter={StaticResource LogicalNotConverter}}" IsChecked="{Binding Path=Hopper2, Mode=TwoWay}" Margin="11,8,0,0" Click="rbPowSel_Click"/>
-            <local:NumericTextBox x:Name="cvPowderFeed" Grid.Row="1" Grid.ColumnSpan="2" Grid.Column="3" Value="{Binding Path=PowderRPM, Mode=OneWay}" Format="#0.0" Background="#FFF8F8F8" HorizontalAlignment="Left" Margin="5,0,0,0" IsReadOnly="True" Focusable="False" VerticalAlignment="Top" Width="40"/>
-            <Label x:Name="lblPFRunit" Grid.Row="1" Grid.ColumnSpan="2" Grid.Column="3" Content="RPM" HorizontalAlignment="Left" Margin="45,0,0,0" VerticalAlignment="Top"/>
+            <Button x:Uid="btn_carset" Content="Gas Purge" IsEnabled="{Binding Path=Mist, Converter={StaticResource LogicalNotConverter}}" Grid.Row="1" Grid.Column="3" Grid.ColumnSpan="2" Width="70" Height="20" HorizontalAlignment="Left" Margin="10,3,0,0" VerticalAlignment="Top"/>
         </Grid>
     </GroupBox>
 </UserControl>

@@ -1,0 +1,44 @@
+﻿<UserControl x:Class="CNC.Controls.RecipeControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:system="clr-namespace:System;assembly=mscorlib"
+             xmlns:local="clr-namespace:CNC.Controls"
+             xmlns:core="clr-namespace:CNC.Core;assembly=CNC.Core"
+             mc:Ignorable="d"
+             d:DesignHeight="100" Width="Auto">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <local:LogicalNotConverter x:Key="LogicalNotConverter" />
+            <system:String x:Uid="str_RecipeFlyout" x:Key="MenuLabel">_BLC</system:String>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="SharedStyles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Border BorderBrush="DarkGray" BorderThickness="1" CornerRadius="3" Background="#FFE5E5EA">
+        <Grid Width="230" Margin="10,0,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="80"/>
+                <ColumnDefinition Width="90"/>
+                <ColumnDefinition Width="55"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="37"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+            </Grid.RowDefinitions>
+            <Label x:Name="lbl_pfr" Content="Powder Flow:" Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,7,0,0" FontSize="12"/>
+            <local:NumericField x:Uid="num_pfr" IsReadOnly="{Binding Path=IsJobRunning, Converter={StaticResource LogicalNotConverter}}" Label="" Grid.Row="0" Grid.Column="1" Value="{Binding Path=PowderRPM, Mode=TwoWay}" Unit="RPM" Format="0.#0" HorizontalAlignment="Left" Margin="-65,7,0,0" VerticalAlignment="Top"/>
+            <Button x:Name="btn_pfr" Content="Set" IsEnabled="{Binding Path=IsJobRunning, Converter={StaticResource LogicalNotConverter}}" Grid.Row="0" Grid.Column="2" Width="50" Height="25" HorizontalAlignment="Left" Margin="0,7,0,0" VerticalAlignment="Top" Click="btn_Set"/>
+            <Label x:Name="lbl_cgas" Content="Carrier Gas:" Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,0,0,0" FontSize="12"/>
+            <local:NumericField x:Uid="num_cgas" IsReadOnly="{Binding Path=IsJobRunning, Converter={StaticResource LogicalNotConverter}}" Label="" Grid.Row="1" Grid.Column="1" Value="{Binding Path=CarrierLPM, Mode=TwoWay}" Unit="L/min" Format="#0.0" HorizontalAlignment="Left" Margin="-65,0,0,0" VerticalAlignment="Top"/>
+            <Button x:Name="btn_cgas" Content="Set" IsEnabled="{Binding Path=IsJobRunning, Converter={StaticResource LogicalNotConverter}}" Grid.Row="1" Grid.Column="2" Width="50" Height="25" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top" Click="btn_Set"/>
+            <Label x:Name="lbl_sgas" Content="Shield Gas:" Grid.Row="2" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,0,0,0" FontSize="12"/>
+            <local:NumericField x:Uid="num_sgas" IsReadOnly="{Binding Path=IsJobRunning, Converter={StaticResource LogicalNotConverter}}" Label="" Grid.Row="2" Grid.Column="1" Value="{Binding Path=ShieldLPM, Mode=TwoWay}" Unit="L/min" Format="#0.0" HorizontalAlignment="Left" Margin="-65,0,0,0" VerticalAlignment="Top"/>
+            <Button x:Name="btn_sgas" Content="Set" IsEnabled="{Binding Path=IsJobRunning, Converter={StaticResource LogicalNotConverter}}" Grid.Row="2" Grid.Column="2" Width="50" Height="25" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top" Click="btn_Set"/>
+        </Grid>
+    </Border>
+</UserControl>
+

@@ -60,7 +60,7 @@ namespace GCode_Sender
         private GrblViewModel model;
         private IInputElement focusedControl = null;
         private Controller Controller = null;
-        private SidebarItem thcFlyout = null;
+        private SidebarItem recipeFlyout = null;
 
         public JobView()
         {
@@ -410,8 +410,8 @@ namespace GCode_Sender
             MainWindow.EnableView(true, ViewType.Offsets);
             MainWindow.EnableView(true, ViewType.GRBLConfig);
 
-            if(GrblInfo.THCMode && thcFlyout == null)
-                MainWindow.UIViewModel.SidebarItems.Add(thcFlyout = new SidebarItem(MainWindow.ui.thcControl));
+ //           if(GrblInfo.THCMode && thcFlyout == null)
+ //               MainWindow.UIViewModel.SidebarItems.Add(thcFlyout = new SidebarItem(MainWindow.ui.thcControl));
 
             return true;
         }
