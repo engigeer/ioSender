@@ -54,7 +54,7 @@ namespace CNC.Controls
 
             btn_pfr.Tag = "PowderFeedRate";
             btn_cgas.Tag = "CarrierGas";
-            btn_sgas.Tag = "ShieldGas";
+            btn_ngas.Tag = "NozzleGas";
         }
         public string MenuLabel { get { return (string)FindResource("MenuLabel"); } }
 
@@ -66,12 +66,21 @@ namespace CNC.Controls
         private void btn_Set(object sender, System.Windows.RoutedEventArgs e)
         {
             if ((string)(sender as Button).Tag == "PowderFeedRate")
+            {
+                (DataContext as GrblViewModel).ExecuteCommand(string.Format(""));
                 (DataContext as GrblViewModel).ExecuteCommand(string.Format("M520 R{0}", (DataContext as GrblViewModel).PowderRPM.ToString("F2")));
+            }
             else if ((string)(sender as Button).Tag == "CarrierGas")
-                (DataContext as GrblViewModel).ExecuteCommand(string.Format("M518 R{0}", (DataContext as GrblViewModel).CarrierLPM.ToString("F2")));
-            else if ((string)(sender as Button).Tag == "ShieldGas")
-                (DataContext as GrblViewModel).ExecuteCommand(string.Format("M519 R{0}", (DataContext as GrblViewModel).ShieldLPM.ToString("F2")));
-            //else
+            {
+                (DataContext as GrblViewModel).ExecuteCommand(string.Format(""));
+                (DataContext as GrblViewModel).ExecuteCommand(string.Format("M530 R{0}", (DataContext as GrblViewModel).CarrierLPM.ToString("F0")));
+            }
+            else if ((string)(sender as Button).Tag == "NozzleGas")
+            {
+                (DataContext as GrblViewModel).ExecuteCommand(string.Format(""));
+                (DataContext as GrblViewModel).ExecuteCommand(string.Format("M540 R{0}", (DataContext as GrblViewModel).NozzleLPM.ToString("F0")));
+            }
+        //else
             //    (DataContext as GrblViewModel).ExecuteCommand(GrblCommand.Fan);
         }
     }
