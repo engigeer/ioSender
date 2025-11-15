@@ -30,14 +30,12 @@
                 <RowDefinition Height="30"/>
             </Grid.RowDefinitions>
             <Label x:Name="lbl_pfr" Content="Powder Flow:" Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,7,0,0" FontSize="12"/>
-            <local:NumericField x:Uid="num_pfr" IsReadOnly="{Binding Path=IsJobRunning}" Label="" Grid.Row="0" Grid.Column="1" Value="{Binding Path=PowderRPM, Mode=TwoWay}" Unit="RPM" Format="0.#0" HorizontalAlignment="Left" Margin="-65,7,0,0" VerticalAlignment="Top"/>
-            <Button x:Name="btn_pfr" Content="Set" IsEnabled="{Binding Path=IsJobRunning, Converter={StaticResource LogicalNotConverter}}" Grid.Row="0" Grid.Column="2" Width="50" Height="25" HorizontalAlignment="Left" Margin="0,7,0,0" VerticalAlignment="Top" Click="btn_Set"/>
+            <local:NumericField x:Uid="num_pfr" IsReadOnly="{Binding Path=IsJobRunning}" Label="" Grid.Row="0" Grid.Column="1" Value="{Binding Path=PowderRPM, Mode=TwoWay}" Unit="RPM" Format="#0.#0" HorizontalAlignment="Left" Margin="-65,7,0,0" VerticalAlignment="Top"/>
             <Label x:Name="lbl_cgas" Content="Carrier Gas:" Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,0,0,0" FontSize="12"/>
-            <local:NumericField x:Uid="num_cgas" IsReadOnly="{Binding Path=IsJobRunning}" Label="" Grid.Row="1" Grid.Column="1" Value="{Binding Path=CarrierLPM, Mode=TwoWay}" Unit="L/min" Format="#0.0" HorizontalAlignment="Left" Margin="-65,0,0,0" VerticalAlignment="Top"/>
-            <Button x:Name="btn_cgas" Content="Set" IsEnabled="{Binding Path=IsJobRunning, Converter={StaticResource LogicalNotConverter}}" Grid.Row="1" Grid.Column="2" Width="50" Height="25" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top" Click="btn_Set"/>
+            <local:NumericField x:Uid="num_cgas" IsReadOnly="{Binding Path=IsJobRunning}" Label="" Grid.Row="1" Grid.Column="1" Value="{Binding Path=CarrierLPM, Mode=TwoWay}" Unit="L/min" Format=" #0.0" HorizontalAlignment="Left" Margin="-65,0,0,0" VerticalAlignment="Top"/>
             <Label x:Name="lbl_ngas" Content="Nozzle Gas:" Grid.Row="2" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,0,0,0" FontSize="12"/>
-            <local:NumericField x:Uid="num_ngas" IsReadOnly="{Binding Path=IsJobRunning}" Label="" Grid.Row="2" Grid.Column="1" Value="{Binding Path=NozzleLPM, Mode=TwoWay}" Unit="L/min" Format="#0.0" HorizontalAlignment="Left" Margin="-65,0,0,0" VerticalAlignment="Top"/>
-            <Button x:Name="btn_ngas" Content="Set" IsEnabled="{Binding Path=IsJobRunning, Converter={StaticResource LogicalNotConverter}}" Grid.Row="2" Grid.Column="2" Width="50" Height="25" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top" Click="btn_Set"/>
+            <local:NumericField x:Uid="num_ngas" IsReadOnly="{Binding Path=IsJobRunning}" Label="" Grid.Row="2" Grid.Column="1" Value="{Binding Path=NozzleLPM, Mode=TwoWay}" Unit="L/min" Format=" #0.0" HorizontalAlignment="Left" Margin="-65,0,0,0" VerticalAlignment="Top"/>
+            <Button x:Name="btn_ngas" Content="Set" IsEnabled="{Binding Path=IsJobRunning, Converter={StaticResource LogicalNotConverter}}" Grid.Row="2" Grid.Column="2" Width="50" Height="25" HorizontalAlignment="Left" Margin="3,0,0,0" VerticalAlignment="Top" Click="btn_Set"/>
         </Grid>
     </Border>
 </UserControl>

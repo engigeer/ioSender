@@ -163,5 +163,14 @@ namespace CNC.Controls
             else
                 Text = Math.Round(Value, (np.Precision)).ToString(np.DisplayFormat, CultureInfo.InvariantCulture);
         }
+        protected override void OnLostFocus(RoutedEventArgs e)
+        {
+            base.OnLostFocus(e);
+
+            // Reformat the displayed text according to the format
+            updateText = false;
+            Text = Value.ToString(np.DisplayFormat, CultureInfo.InvariantCulture);
+            updateText = true;
+        }
     }
 }
