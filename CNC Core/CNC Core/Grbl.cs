@@ -94,8 +94,8 @@ namespace CNC.Core
             CMD_SPINDLE_OVR_FINE_PLUS = 0x9C,
             CMD_SPINDLE_OVR_FINE_MINUS = 0x9D,
             CMD_SPINDLE_OVR_STOP = 0x9E,
-            CMD_COOLANT_FLOOD_OVR_TOGGLE = 0xA0,
-            CMD_COOLANT_MIST_OVR_TOGGLE = 0xA1,
+            CMD_COOLANT_FLOOD_OVR_TOGGLE = 0xBD,
+            CMD_COOLANT_MIST_OVR_TOGGLE = 0xBC,
             CMD_PID_REPORT = 0xA2,
             CMD_TOOL_ACK = 0xA3,
             CMD_PROBE_CONNECTED_TOGGLE = 0xA4;

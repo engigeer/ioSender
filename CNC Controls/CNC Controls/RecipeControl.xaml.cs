@@ -68,11 +68,11 @@ namespace CNC.Controls
             if ((string)(sender as Button).Tag == "NozzleGas")
             {
                 (DataContext as GrblViewModel).ExecuteCommand(string.Format(""));
-                (DataContext as GrblViewModel).ExecuteCommand(string.Format("M520 R{0}", (DataContext as GrblViewModel).PowderRPM.ToString("F2")));
+                (DataContext as GrblViewModel).ExecuteCommand(string.Format("M530 R{0}", (DataContext as GrblViewModel).PowderRPM.ToString("F2")));
                 (DataContext as GrblViewModel).ExecuteCommand(string.Format(""));
-                (DataContext as GrblViewModel).ExecuteCommand(string.Format("M530 R{0}", (DataContext as GrblViewModel).CarrierLPM.ToString("F0")));
+                (DataContext as GrblViewModel).ExecuteCommand(string.Format("M540 R{0}", (DataContext as GrblViewModel).CarrierLPM.ToString("F0")));
                 (DataContext as GrblViewModel).ExecuteCommand(string.Format(""));
-                (DataContext as GrblViewModel).ExecuteCommand(string.Format("M540 R{0}", (DataContext as GrblViewModel).NozzleLPM.ToString("F0")));
+                (DataContext as GrblViewModel).ExecuteCommand(string.Format("M550 R{0}", (DataContext as GrblViewModel).NozzleLPM.ToString("F0")));
             }
         //else
             //    (DataContext as GrblViewModel).ExecuteCommand(GrblCommand.Fan);

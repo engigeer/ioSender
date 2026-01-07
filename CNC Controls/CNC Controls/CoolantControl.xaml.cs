@@ -50,8 +50,8 @@ namespace CNC.Controls
         {
             InitializeComponent();
 
-            rbPowSel1.Tag = "M521";
-            rbPowSel2.Tag = "M522";
+            rbPowSel1.Tag = "M517";
+            rbPowSel2.Tag = "M518";
         }
 
         private void chkCoolant_Click(object sender, System.Windows.RoutedEventArgs e)
@@ -66,8 +66,14 @@ namespace CNC.Controls
 
         private void rbPowSel_Click(object sender, RoutedEventArgs e)
         {
-            (DataContext as GrblViewModel).ExecuteCommand((string)((RadioButton)sender).Tag);
+            (DataContext as GrblViewModel).ExecuteCommand((string)((CheckBox)sender).Tag);
         
+        }
+
+        private void gasPurge_Click(object sender, RoutedEventArgs e)
+        {
+            (DataContext as GrblViewModel).ExecuteCommand((string)("M814")); // EXECUTE MACRO #5 stored in setting $494
+
         }
     }
 }

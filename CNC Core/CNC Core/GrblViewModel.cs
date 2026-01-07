@@ -49,12 +49,12 @@ namespace CNC.Core
 {
     public class GrblViewModel : MeasureViewModel
     {
-        private string _tool, _probe, _message, _WPos, _MPos, _DTG, _wco, _wcs, _a, _fs, _ov, _pn, _sc, _sd, _ldm, _pfr, _cgas, _ngas, _d, _gc, _h, _thcv, _thcs, _spindle;
+        private string _tool, _probe, _message, _WPos, _MPos, _DTG, _wco, _wcs, _a, _fs, _ov, _pn, _sc, _sd, _smc, _ldm, _pfr, _cgas, _ngas, _d, _gc, _h, _thcv, _thcs, _spindle;
         private string _mdiCommand, _mdiText, _fileName;
         private string[] _rtState = new string[3];
         private bool has_wco = false, _hasFans = false, _multiProbe = false;
         private SDState _sdMounted = SDState.Unmounted;
-        private bool _flood, _floodenable = true, _spindleenable, _emission, _mist, _pilot, _shutter, _threshold, _reseterror, _hopper1, _hopper2, _toolChange, _reset, _isMPos, _isJobRunning, _isProbeSuccess, _pgmEnd, _isParserStateLive, _isTloRefSet;
+        private bool _flood, _floodenable = true, _spindleenable, _emission, _mist, _pilot, _shutter, _threshold, _reseterror, _hopper1, _hopper2, _gaspurge, _toolChange, _reset, _isMPos, _isJobRunning, _isProbeSuccess, _pgmEnd, _isParserStateLive, _isTloRefSet;
         private bool _isCameraVisible = false, _responseLogVerbose = false, _isProbing = false, _autoReporting = false;
         private bool? _mpg;
         private int _pwm, _line, _scrollpos, _blocks = 0, _startFromBlock = 0, _executingBlock = 0, _auxinValue = -2, _autoReportInterval = 0, _spindle_num = 0;
@@ -431,6 +431,8 @@ namespace CNC.Core
                         JobTimer.Stop();
                         DtgPosition.Clear();
                     OnPropertyChanged();
+                    OnPropertyChanged(nameof(CanPowderSelect1));
+                    OnPropertyChanged(nameof(CanPowderSelect2));
                 }
             }
         }
@@ -546,10 +548,6 @@ namespace CNC.Core
 
         public double NozzleLPM { get { return _nozzlelpm; } set { _nozzlelpm = value; OnPropertyChanged(); } }
 
-        public bool Hopper1 { get { return _hopper1; } set { _hopper1 = value; OnPropertyChanged(); } }
-
-        public bool Hopper2 { get { return _hopper2; } set { _hopper2 = value; OnPropertyChanged(); } }
-
         public int LineNumber { get { return _line; } private set { _line = value; OnPropertyChanged(); } }
 
         public double THCVoltage { get { return _thcVoltage; } private set { _thcVoltage = value; OnPropertyChanged(); } }
@@ -559,15 +557,68 @@ namespace CNC.Core
 
         public int SpindleNum { get { return _spindle_num; } set { _spindle_num = value; OnPropertyChanged(); } }
 
+        public bool CanGasPurge => !Mist && !GasPurge;
+
+        public bool CanPowderSelect1 => !Mist && !IsJobRunning && !Hopper1;
+
+        public bool CanPowderSelect2 => !Mist && !IsJobRunning && !Hopper2;
+
+        public bool CanTogglePowder => Hopper1 || Hopper2;
+
+        public bool GasPurge
+        {
+            get => _gaspurge;
+            set
+            {
+                if (_gaspurge != value)
+                {
+                    _gaspurge = value;
+                    OnPropertyChanged();
+                    OnPropertyChanged(nameof(CanGasPurge));
+                }
+            }
+        }
         public bool Mist
         {
-            get { return _mist; }
+            get => _mist;
             set
             {
                 if (_mist != value)
                 {
                     _mist = value;
                     OnPropertyChanged();
+                    OnPropertyChanged(nameof(CanGasPurge));
+                    OnPropertyChanged(nameof(CanPowderSelect1));
+                    OnPropertyChanged(nameof(CanPowderSelect2));
+                }
+            }
+        }
+        public bool Hopper1
+        {
+            get => _hopper1;
+            set
+            {
+                if (_hopper1 != value)
+                {
+                    _hopper1 = value;
+                    OnPropertyChanged();
+                    OnPropertyChanged(nameof(CanPowderSelect1));
+                    OnPropertyChanged(nameof(CanTogglePowder));
+                }
+            }
+        }
+   
+        public bool Hopper2
+        {
+            get => _hopper2;
+            set
+            {
+                if (_hopper2 != value)
+                {
+                    _hopper2 = value;
+                    OnPropertyChanged();
+                    OnPropertyChanged(nameof(CanPowderSelect2));
+                    OnPropertyChanged(nameof(CanTogglePowder));
                 }
             }
         }
@@ -987,13 +1038,13 @@ namespace CNC.Core
                     break;
 
                 case "A":
-                    if (_a != value)
+                    if (true)
                     {
                         _a = value;
 
                         if (_a == "")
                         {
-                            Mist = Flood = IsToolChanging = false;
+                            Mist = IsToolChanging = false;
                             FloodEnable = true;
                             SpindleEnable = false;
                             EmissionEnable = false;
@@ -1001,8 +1052,14 @@ namespace CNC.Core
                         }
                         else
                         {
-                            Mist = value.Contains("M");
-                            Flood = value.Contains("F");
+                            if (Hopper1) // HOPPER SELECT CHANNEL A
+                            {
+                                Mist = value.Contains("M"); // MIST SIGNAL CONTROLS ON/OFF FOR CHANNEL A
+                            }
+                            if (Hopper2) // HOPPER SELECT CHANNEL B
+                            {
+                                Mist = value.Contains("F"); // FLOOD SIGNAL CONTROLS ON/OFF FOR CHANNEL B
+                            }
                             SpindleEnable = value.Contains("S");
                             EmissionEnable = SpindleEnable && Threshold;
                             if (GrblState.State != GrblStates.Hold)
@@ -1163,6 +1220,19 @@ namespace CNC.Core
                     }
                     break;
 
+                case "SMC":
+                    if (_smc != value)
+                    {
+                        _smc = value;
+                        try
+                        {
+                            Flood = (int.Parse(value) & 0x1) == 1;
+                        }
+                        catch { }
+                        ;
+                    }
+                    break;
+
                 case "LDM":
                     if (_ldm != value)
                     {
@@ -1173,8 +1243,9 @@ namespace CNC.Core
                             Shutter = (int.Parse(value) >> 1 & 0x1) == 1;
                             Threshold = (int.Parse(value) >> 2 & 0x1) == 1;
                             ResetError = (int.Parse(value) >> 3 & 0x1) == 1;
-                            Hopper1 = (int.Parse(value) >> 4 & 0x1) != 1;
-                            Hopper2 = (int.Parse(value) >> 4 & 0x1) == 1;
+                            Hopper1 = (int.Parse(value) >> 4 & 0x1) == 1;
+                            Hopper2 = (int.Parse(value) >> 5 & 0x1) == 1;
+                            GasPurge = (int.Parse(value) >> 6 & 0x1) == 1;
 
                             EmissionEnable = SpindleEnable && Threshold;
                         }
