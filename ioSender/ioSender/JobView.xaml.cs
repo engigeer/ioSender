@@ -60,7 +60,7 @@ namespace GCode_Sender
         private GrblViewModel model;
         private IInputElement focusedControl = null;
         private Controller Controller = null;
-        private SidebarItem recipeFlyout = null;
+    //    private SidebarItem recipeFlyout = null;
 
         public JobView()
         {
