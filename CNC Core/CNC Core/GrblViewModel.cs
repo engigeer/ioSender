@@ -54,7 +54,7 @@ namespace CNC.Core
         private string[] _rtState = new string[3];
         private bool has_wco = false, _hasFans = false, _multiProbe = false;
         private SDState _sdMounted = SDState.Unmounted;
-        private bool _flood, _floodenable = true, _spindleenable, _emission, _mist, _pilot, _shutter, _threshold, _reseterror, _hopper1, _hopper2, _gaspurge, _toolChange, _reset, _isMPos, _isJobRunning, _isProbeSuccess, _pgmEnd, _isParserStateLive, _isTloRefSet;
+        private bool _flood, _floodenable = true, _spindleenable, _emission, _hop1on, _hop2on, _mist, _pilot, _shutter, _threshold, _reseterror, _hopper1, _hopper2, _gaspurge, _toolChange, _reset, _isMPos, _isJobRunning, _isProbeSuccess, _pgmEnd, _isParserStateLive, _isTloRefSet;
         private bool _isCameraVisible = false, _responseLogVerbose = false, _isProbing = false, _autoReporting = false;
         private bool? _mpg;
         private int _pwm, _line, _scrollpos, _blocks = 0, _startFromBlock = 0, _executingBlock = 0, _auxinValue = -2, _autoReportInterval = 0, _spindle_num = 0;
@@ -534,6 +534,7 @@ namespace CNC.Core
         public string RunTime { get { return JobTimer.RunTime; } set { OnPropertyChanged(); } } // Cannot be set...
                                                                                                 // CO2 Laser
         public bool HasFans { get { return _hasFans; } set { _hasFans = value; OnPropertyChanged(); } }
+
         public bool Pilot { get { return _pilot; } set { _pilot = value; OnPropertyChanged(); } }
 
         public bool Shutter { get { return _shutter; } set { _shutter = value; OnPropertyChanged(); } }
@@ -565,6 +566,40 @@ namespace CNC.Core
 
         public bool CanTogglePowder => Hopper1 || Hopper2;
 
+        public bool Hop1On
+        {
+            get => _hop1on;
+            private set
+            {
+                if (_hop1on != value)
+                {
+                    _hop1on = value;
+                    OnPropertyChanged();
+                    OnPropertyChanged(nameof(Mist));
+                    OnPropertyChanged(nameof(CanGasPurge));
+                    OnPropertyChanged(nameof(CanPowderSelect1));
+                    OnPropertyChanged(nameof(CanPowderSelect2));
+                }
+            }
+        }
+
+        public bool Hop2On
+        {
+            get => _hop2on;
+            private set
+            {
+                if (_hop2on != value)
+                {
+                    _hop2on = value;
+                    OnPropertyChanged();
+                    OnPropertyChanged(nameof(Mist));
+                    OnPropertyChanged(nameof(CanGasPurge));
+                    OnPropertyChanged(nameof(CanPowderSelect1));
+                    OnPropertyChanged(nameof(CanPowderSelect2));
+                }
+            }
+        }
+
         public bool GasPurge
         {
             get => _gaspurge;
@@ -578,21 +613,8 @@ namespace CNC.Core
                 }
             }
         }
-        public bool Mist
-        {
-            get => _mist;
-            set
-            {
-                if (_mist != value)
-                {
-                    _mist = value;
-                    OnPropertyChanged();
-                    OnPropertyChanged(nameof(CanGasPurge));
-                    OnPropertyChanged(nameof(CanPowderSelect1));
-                    OnPropertyChanged(nameof(CanPowderSelect2));
-                }
-            }
-        }
+        public bool Mist => (Hop1On && Hopper1) || (Hop2On && Hopper2);
+
         public bool Hopper1
         {
             get => _hopper1;
@@ -602,7 +624,10 @@ namespace CNC.Core
                 {
                     _hopper1 = value;
                     OnPropertyChanged();
+                    OnPropertyChanged(nameof(Mist));
+                    OnPropertyChanged(nameof(CanGasPurge));
                     OnPropertyChanged(nameof(CanPowderSelect1));
+                    OnPropertyChanged(nameof(CanPowderSelect2));
                     OnPropertyChanged(nameof(CanTogglePowder));
                 }
             }
@@ -617,6 +642,9 @@ namespace CNC.Core
                 {
                     _hopper2 = value;
                     OnPropertyChanged();
+                    OnPropertyChanged(nameof(Mist));
+                    OnPropertyChanged(nameof(CanGasPurge));
+                    OnPropertyChanged(nameof(CanPowderSelect1));
                     OnPropertyChanged(nameof(CanPowderSelect2));
                     OnPropertyChanged(nameof(CanTogglePowder));
                 }
@@ -1044,7 +1072,7 @@ namespace CNC.Core
 
                         if (_a == "")
                         {
-                            Mist = IsToolChanging = false;
+                            Hop1On = Hop2On = IsToolChanging = false;
                             FloodEnable = true;
                             SpindleEnable = false;
                             EmissionEnable = false;
@@ -1052,14 +1080,8 @@ namespace CNC.Core
                         }
                         else
                         {
-                            if (Hopper1) // HOPPER SELECT CHANNEL A
-                            {
-                                Mist = value.Contains("M"); // MIST SIGNAL CONTROLS ON/OFF FOR CHANNEL A
-                            }
-                            if (Hopper2) // HOPPER SELECT CHANNEL B
-                            {
-                                Mist = value.Contains("F"); // FLOOD SIGNAL CONTROLS ON/OFF FOR CHANNEL B
-                            }
+                            Hop1On = value.Contains("M"); // MIST SIGNAL CONTROLS ON/OFF FOR CHANNEL A
+                            Hop2On = value.Contains("F"); // FLOOD SIGNAL CONTROLS ON/OFF FOR CHANNEL B
                             SpindleEnable = value.Contains("S");
                             EmissionEnable = SpindleEnable && Threshold;
                             if (GrblState.State != GrblStates.Hold)
@@ -1221,7 +1243,7 @@ namespace CNC.Core
                     break;
 
                 case "SMC":
-                    if (_smc != value)
+                    if (true) //_smc != value
                     {
                         _smc = value;
                         try
