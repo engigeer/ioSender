@@ -97,6 +97,32 @@ namespace CNC.Controls
             NumericProperties.OnFormatChanged(d, ((NumericTextBox)d).np, (string)e.NewValue);
         }
 
+        private bool TryUpdateValue(string text)
+        {
+            // Valid intermediate states during typing or touch
+            if (string.IsNullOrWhiteSpace(text) ||
+                text == "." ||
+                text == "-" ||
+                text == "-.")
+            {
+                Value = 0d;
+                return true;
+            }
+
+            if (double.TryParse(
+                    text,
+                    np.Styles,
+                    CultureInfo.InvariantCulture,
+                    out double val))
+            {
+                Value = val;
+                return true;
+            }
+
+            // Invalid intermediate state → ignore, do NOT crash
+            return false;
+        }
+
         public new void Clear()
         {
             updateText = false;
@@ -114,7 +140,7 @@ namespace CNC.Controls
                 string text = SelectionLength > 0 ? Text.Remove(SelectionStart, SelectionLength) : Text;
 
                 updateText = false;
-                Value = double.Parse(text == string.Empty || text == "." ? "0" : (text == "-" || text == "-." ? "-0" : text), np.Styles, CultureInfo.InvariantCulture);
+                TryUpdateValue(text);
                 updateText = true;
             }
         }
@@ -124,44 +150,29 @@ namespace CNC.Controls
             TextBox textBox = (TextBox)e.OriginalSource;
             string text = textBox.SelectionLength > 0 ? textBox.Text.Remove(textBox.SelectionStart, textBox.SelectionLength) : textBox.Text;
             text = text.Insert(textBox.CaretIndex, e.Text);
-            if (!(e.Handled = !NumericProperties.IsStringNumeric(text, np)))
+            if (!NumericProperties.IsStringNumeric(text, np))
             {
-                updateText = false;
-                Value = double.Parse(text == "" || text == "." ? "0" : (text == "-" || text == "-." ? "-0" : text), np.Styles, CultureInfo.InvariantCulture);
-                updateText = true;
+                e.Handled = true;
+                return;
             }
+
+            updateText = false;
+            TryUpdateValue(text);
+            updateText = true;
 
             base.OnPreviewTextInput(e);
         }
 
         protected override void OnTextChanged(TextChangedEventArgs e)
         {
-            double val = 0d;
-            if (double.TryParse(Text == string.Empty ? "NaN" : Text, np.Styles, CultureInfo.InvariantCulture, out val))
-            {
-                if (!IsReadOnly && IsEnabled)
-                {
-                    updateText = false;
-                    Value = val;
-                    updateText = true;
-                }
+            if (!updateText)
+                return;
 
+            // Only update Value if parsing succeeds
+            if (TryUpdateValue(Text))
+            {
                 base.OnTextChanged(e);
             }
-            else if(Text == string.Empty || Text == ".")
-            {
-                updateText = false;
-                Value = 0d;
-                updateText = true;
-            }
-            else if (Text == "-" || Text == "-.")
-            {
-                updateText = false;
-                Value = -0d;
-                updateText = true;
-            }
-            else
-                Text = Math.Round(Value, (np.Precision)).ToString(np.DisplayFormat, CultureInfo.InvariantCulture);
         }
         protected override void OnLostFocus(RoutedEventArgs e)
         {
@@ -171,6 +182,23 @@ namespace CNC.Controls
             updateText = false;
             Text = Value.ToString(np.DisplayFormat, CultureInfo.InvariantCulture);
             updateText = true;
+        }
+
+        protected override void OnGotKeyboardFocus(KeyboardFocusChangedEventArgs e)
+        {
+            SelectAll();
+            base.OnGotKeyboardFocus(e);
+        }
+
+        protected override void OnPreviewMouseLeftButtonDown(MouseButtonEventArgs e)
+        {
+            if (!IsKeyboardFocusWithin)
+            {
+                e.Handled = true;
+                Focus();
+            }
+
+            base.OnPreviewMouseLeftButtonDown(e);
         }
     }
 }
