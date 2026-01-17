@@ -89,6 +89,20 @@
                             </Setter.Value>
                         </Setter>
                     </Style>
+                    <Style x:Key="SingleBlockVisibleStyle">
+                        <Setter Property="Control.Visibility">
+                            <Setter.Value>
+                                <MultiBinding Converter="{StaticResource IsSignalVisibleConverter}">
+                                    <Binding Path="OptionalSignals" />
+                                    <Binding>
+                                        <Binding.Source>
+                                            <core:Signals>SingleBlock</core:Signals>
+                                        </Binding.Source>
+                                    </Binding>
+                                </MultiBinding>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
                     <Style x:Key="BlockDeleteVisibleStyle">
                         <Setter Property="Control.Visibility">
                             <Setter.Value>
@@ -127,7 +141,7 @@
                 <local:SignalControl Label="X" IsSet="{Binding Path=Signals[(core:Signals)LimitX], Mode=OneWay}"/>
                 <local:SignalControl Label="Y" IsSet="{Binding Path=Signals[(core:Signals)LimitY], Mode=OneWay}" Style="{StaticResource YAxisVisibleStyle}"/>
                 <local:SignalControl Label="Z" IsSet="{Binding Path=Signals[(core:Signals)LimitZ], Mode=OneWay}" Style="{StaticResource ZAxisVisibleStyle}"/>
-                <local:SignalControl Label="{Binding Path=AxisLetter.A, Mode=OneWay}" IsSet="{Binding Path=Signals[(core:Signals)LimitA], Mode=OneWay}" Style="{StaticResource AAxisVisibleStyle}"/>
+                <local:SignalControl Label="{Binding Path=AxisLetter.A, Mode=OneWay}" IsSet="{Binding Path=Signals[(core:Signals)LimitA], Mode=OneWay}" Style="{StaticResource BAxisVisibleStyle}"/>
                 <local:SignalControl Label="{Binding Path=AxisLetter.B, Mode=OneWay}" IsSet="{Binding Path=Signals[(core:Signals)LimitB], Mode=OneWay}" Style="{StaticResource BAxisVisibleStyle}"/>
                 <local:SignalControl Label="{Binding Path=AxisLetter.C, Mode=OneWay}" IsSet="{Binding Path=Signals[(core:Signals)LimitC], Mode=OneWay}" Style="{StaticResource CAxisVisibleStyle}"/>
                 <local:SignalControl Label="U" IsSet="{Binding Path=Signals[(core:Signals)LimitU], Mode=OneWay}" Style="{StaticResource UAxisVisibleStyle}"/>
@@ -137,6 +151,7 @@
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,3,0" VerticalAlignment="Center" DockPanel.Dock="Right">
                 <local:SignalControl x:Uid="lbl_signalMotorWarning" Label="W" ToolTip="Motor warning" IsSet="{Binding Path=Signals[(core:Signals)MotorWarning], Mode=OneWay}" Style="{StaticResource MotorWarningVisibleStyle}"/>
                 <local:SignalControl x:Uid="lbl_signalMotorFault" Label="F" ToolTip="Motor fault" IsSet="{Binding Path=Signals[(core:Signals)MotorFault], Mode=OneWay}" Style="{StaticResource MotorFaultVisibleStyle}"/>
+                <local:SignalControl x:Uid="lbl_signalSingleBlock" Label="Q" ToolTip="Single Block" IsSet="{Binding Path=Signals[(core:Signals)SingleBlock], Mode=OneWay}" Style="{StaticResource SingleBlockVisibleStyle}"/>
                 <local:SignalControl x:Uid="lbl_signalBlockDelete" Label="B" ToolTip="Block delete" IsSet="{Binding Path=Signals[(core:Signals)BlockDelete], Mode=OneWay}" Style="{StaticResource BlockDeleteVisibleStyle}"/>
                 <local:SignalControl x:Uid="lbl_signalOptionalStop" Label="O" ToolTip="Optional stop" IsSet="{Binding Path=Signals[(core:Signals)OptionalStop], Mode=OneWay}" Style="{StaticResource OptionalStopVisibleStyle}"/>
                 <local:SignalControl x:Uid="lbl_signalFeedHold" Label="H" ToolTip="Feed hold" IsSet="{Binding Path=Signals[(core:Signals)Hold], Mode=OneWay}"/>
