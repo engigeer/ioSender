@@ -5,10 +5,10 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:CNC.Controls"
              mc:Ignorable="d" 
-             d:DesignHeight="33" d:DesignWidth="193">
-    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Height="33" VerticalAlignment="Top" Width="193" RenderTransformOrigin="0.425,0">
-        <Label x:Name="axis" Content="{Binding Label, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=OneWay}" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Margin="3,0,3,0" Width="30" FontSize="20"/>
-        <local:NumericTextBox x:Name="cvMin" Format="{Binding Path=FormatSigned, Mode=OneWay}" Value="{Binding Path=MinValue, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=OneWay}" IsReadOnly="True" Background="#FFF8F8F8" Height="29" Width="103" TextWrapping="NoWrap" TextAlignment="Right" FontSize="20"/>
-        <Label x:Name="unit" Content="{Binding Path=Unit, Mode=OneWay}" Width="35" FontSize="14"/>
+             d:DesignHeight="25" d:DesignWidth="193">
+    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Height="25" VerticalAlignment="Top" Width="193" RenderTransformOrigin="0.425,0">
+        <Label x:Name="axis" Content="{Binding Label, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=OneWay}" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Margin="3,0,3,0" Width="30" FontSize="14"/>
+        <local:DTGTextBox x:Name="cvMin" Format="{Binding Path=FormatSigned, Mode=OneWay}" Value="{Binding Path=MinValue, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=OneWay}" IsReadOnly="True" Background="#FFF8F8F8" Height="21" Width="103" TextWrapping="NoWrap" TextAlignment="Right" FontSize="14"/>
+        <Label x:Name="unit" Content="{Binding Path=Unit, Mode=OneWay}" Width="35" FontSize="11"/>
     </StackPanel>
 </UserControl>
