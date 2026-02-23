@@ -72,7 +72,7 @@ namespace CNC.Controls
 
         private void gasPurge_Click(object sender, RoutedEventArgs e)
         {
-            (DataContext as GrblViewModel).ExecuteCommand((string)("M814")); // EXECUTE MACRO #5 stored in setting $494
+            (DataContext as GrblViewModel).ExecuteCommand((string)("M815")); // EXECUTE MACRO #6 stored in setting $495
 
         }
     }
