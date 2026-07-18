@@ -71,6 +71,7 @@
     <Compile Include="BasicConfigControl.xaml.cs">
       <DependentUpon>BasicConfigControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="DTGTextBox.cs" />
     <Compile Include="GrblConfigControl.xaml.cs">
       <DependentUpon>GrblConfigControl.xaml</DependentUpon>
     </Compile>
