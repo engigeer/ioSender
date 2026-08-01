@@ -22,6 +22,8 @@ $RECYCLE.BIN/
 .svn/
 bin/
 obj/
+vector-master/
+packages/
 
 # =========================
 # Operating System Files

@@ -39,8 +39,9 @@
     <Localizable>False</Localizable>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="RP.Math.Vector3">
-      <HintPath>..\..\Vector-master\RP.Math.Vector3\bin\Release\RP.Math.Vector3.dll</HintPath>
+    <Reference Include="RP.Math.Vector3, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Vector-master\RP.Math.Vector3\bin\Release\netstandard2.0\RP.Math.Vector3.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
