@@ -1356,7 +1356,7 @@ namespace CNC.Core
                                 case 10:
                                     if (GrblSettings.GetInteger(grblHALSetting.UnlockAfterEStop) != 0)
                                     {
-                                        msg = "Emergecy stop";
+                                        msg = "Emergency stop";
                                         _message = LibStrings.FindResource("ContClearResetUnlock");
                                     }
                                     break;
