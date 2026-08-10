@@ -129,6 +129,16 @@ namespace CNC.Core
         public double min_feed { get; private set; }
         public double max_feed { get; private set; }
 
+        private string addLn(string block, uint ln)
+        {
+            if(block.StartsWith("/"))
+                block = "/N" + ln.ToString() + block.Substring(1);
+            else if(!(block.StartsWith(";") || block.StartsWith("#")))
+                block = "N" + ln.ToString() + block;
+
+            return block;
+        }
+
         public bool LoadFile(string filename, bool addLineNumber = false)
         {
             bool ok = true, isComment;
@@ -157,7 +167,7 @@ namespace CNC.Core
                         else if (addLineNumber)
                         {
                             LineNumber += 10;
-                            block = "N" + LineNumber.ToString() + block;
+                            block = addLn(block, LineNumber);
                         } else
                             LineNumber++;
 
@@ -167,7 +177,7 @@ namespace CNC.Core
                             block = commands.Dequeue();
                             LineNumber++;
                             if (addLineNumber)
-                                block = "N" + (LineNumber).ToString() + block;
+                                block = addLn(block, LineNumber);
                             blocks.Add(new GCodeBlock(LineNumber, block, block.Length + 1, false, false));
                         }
                     }
