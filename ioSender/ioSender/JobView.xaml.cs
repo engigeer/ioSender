@@ -388,7 +388,7 @@ namespace GCode_Sender
                 GCodeSender.EnablePolling(true);
             }
 
-            GrblCommand.ToolChange = GrblInfo.ManualToolChange ? "M61Q{0}G43" : (GrblInfo.HasATC ? "T{0}M6" : "T{0}");
+            GrblCommand.ToolChange = GrblInfo.ManualToolChange ? "M61Q{0}G43H{0}" : (GrblInfo.HasATC ? "T{0}M6" : "T{0}");
 
             showProgramLimits();
 
